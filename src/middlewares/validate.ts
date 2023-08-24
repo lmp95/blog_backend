@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import { UserInterface } from '../interfaces/user.interface';
 import ApiError from '../utils/apiError';
+import { JwtPayload, verify } from 'jsonwebtoken';
+import { UserServices } from '../services/user.service';
 
 const callback = (req, resolve, reject) => async (err, user: UserInterface, info: Error) => {
     if (err || info || !user) {
