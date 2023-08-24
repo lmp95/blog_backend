@@ -4,7 +4,7 @@ import { PostController } from '../controllers/post.controller';
 
 const postRouter = Router();
 
-postRouter.route('/').get(authValidation, PostController.getPosts);
-postRouter.route('/').post(authValidation, PostController.createPost);
+postRouter.route('/').all(authValidation).get(PostController.getPosts).post(PostController.createPost);
+postRouter.route('/:postId').all(authValidation).put(PostController.updatePostById).delete(PostController.deletePostById).get(PostController.getPostDetailById);
 
 export default postRouter;
