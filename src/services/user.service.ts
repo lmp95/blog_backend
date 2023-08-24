@@ -27,8 +27,6 @@ const createUser = async (user: UserInterface): Promise<UserInterface> => {
  * @returns {Promise<UserInterface>}
  */
 const getUserByEmail = async (email: string): Promise<UserInterface> => {
-    console.log(email);
-
     return await UserModel.findOne({ email: email });
 };
 

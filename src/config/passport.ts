@@ -6,7 +6,7 @@ config();
 
 const jwtVerify = async (payload, done) => {
     try {
-        const user = await UserModel.findOne({ email: payload.email });
+        const user = await UserModel.findOne({email: payload.email});
         if (!user) {
             return done(null, false);
         }
@@ -16,10 +16,7 @@ const jwtVerify = async (payload, done) => {
     }
 };
 
-export const jwtStrategy = new Strategy(
-    {
-        secretOrKey: process.env.JWT_SECRET,
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    },
-    jwtVerify
-);
+export const jwtStrategy = new Strategy({
+    secretOrKey: process.env.JWT_SECRET,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+}, jwtVerify);

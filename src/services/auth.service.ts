@@ -31,7 +31,6 @@ const generateToken = (user: UserInterface, secret: string = process.env.JWT_SEC
  */
 const Login = async (user: LoginInterface) => {
     const isUser = await UserServices.getUserByEmail(user.email);
-    console.log(user);
 
     if (isUser && (await validatePassword(user.password, isUser.password))) {
         const token = generateToken(isUser);

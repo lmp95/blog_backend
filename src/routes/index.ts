@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRouter from './auth.route';
 import userRouter from './user.route';
+import postRouter from './post.route';
 
 const appRouter = Router();
 
@@ -12,6 +13,10 @@ const defaultRoutes = [
     {
         path: '/users',
         route: userRouter,
+    },
+    {
+        path: '/posts',
+        route: postRouter,
     },
 ];
 
