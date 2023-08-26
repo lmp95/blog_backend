@@ -1,25 +1,5 @@
 import { UserInterface } from '../interfaces/user.interface';
 import UserModel from '../models/user.model';
-import ApiError from '../utils/apiError';
-import { hashPassword } from '../utils/utils';
-
-/**
- * Create user
- * @param {UserInterface} data
- * @returns {Promise<UserInterface>}
- */
-const createUser = async (user: UserInterface): Promise<UserInterface> => {
-    const existUser = await getUserByEmail(user.email);
-    if (!existUser) {
-        user = {
-            ...user,
-            password: await hashPassword(user.password),
-            createdBy: 'default',
-            updatedBy: 'default',
-        };
-        return await UserModel.create(user);
-    } else throw new ApiError(400, 'Email already exist');
-};
 
 /**
  * Get user by email
@@ -39,7 +19,6 @@ const getUsers = async (): Promise<UserInterface[]> => {
 };
 
 export const UserServices = {
-    createUser,
     getUserByEmail,
     getUsers,
 };

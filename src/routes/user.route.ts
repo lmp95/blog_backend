@@ -5,6 +5,6 @@ import { APP_USER_ROLES } from '../config/userRole';
 
 const userRouter = Router();
 
-userRouter.route('/').all(authValidation, roleValidation(APP_USER_ROLES.ADMIN)).get(UserController.getUsers).post(UserController.createUser);
+userRouter.route('/').get(authValidation, roleValidation(APP_USER_ROLES.ADMIN), UserController.getUsers);
 
 export default userRouter;
