@@ -4,6 +4,9 @@ import { UserInterface } from '../interfaces/user.interface';
 import PostModel from '../models/post.model';
 import UserModel from '../models/user.model';
 import ApiError from '../utils/apiError';
+import { DataTableInterface } from '../interfaces/dataTable.interface';
+import { searchRegexMatch } from '../queries/common';
+import { postListQuery } from '../queries/post.query';
 
 /**
  * Create new blog post
@@ -41,6 +44,53 @@ const updatePostById = async (postId: string, post: PostInterface, user: UserInt
 };
 
 /**
+ * get category total count
+ * @returns {Promise<number>}
+ */
+const getPostTotalCount = async (searchQuery?: object): Promise<number> => {
+    const result = await PostModel.aggregate([
+        {
+            $match: searchQuery || {},
+        },
+        {
+            $count: 'total',
+        },
+    ]);
+    return result[0]?.total;
+};
+
+/**
+ * Get all post
+ * @param {string} search
+ * @param {string} limit
+ * @param {string} page
+ * @returns {Promise<DataTableInterface>}
+ */
+const getPosts = async (search: string, limit: string, page: string): Promise<DataTableInterface> => {
+    const currentPage = parseInt(page);
+    const perPage = parseInt(limit);
+
+    let data: DataTableInterface = {
+        data: [],
+        page: currentPage,
+        perPage: perPage,
+        total: 0,
+    };
+    const match = searchRegexMatch({ field: 'title', search: search });
+    await Promise.all([getPostTotalCount(match), PostModel.aggregate(postListQuery({ match: match, currentPage: currentPage, perPage: perPage }))]).then(
+        (values) => {
+            data = {
+                data: values[1],
+                page: currentPage,
+                perPage: perPage,
+                total: values[0],
+            };
+        }
+    );
+    return data;
+};
+
+/**
  *  delete post by Id
  * @param {string} postId
  * @returns {Promise<PostInterface>}
@@ -50,14 +100,6 @@ const deletePostById = async (postId: string): Promise<PostInterface> => {
     if (isValidObjectId(postId)) deletedPost = await PostModel.findByIdAndDelete(postId);
     if (deletedPost) return deletedPost;
     else throw new ApiError(400, 'Fail to delete');
-};
-
-/**
- * Get all blog post list
- * @returns {PostInterface[]}
- */
-const getPosts = async (): Promise<PostInterface[]> => {
-    return await PostModel.find();
 };
 
 /**
