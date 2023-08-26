@@ -7,6 +7,6 @@
         "moduleResolution": "node",
         "outDir": "./build",
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
     }
 }

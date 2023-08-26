@@ -3,9 +3,10 @@ import jwt from 'jsonwebtoken';
 import { LoginInterface } from '../interfaces/login.interface';
 import { UserInterface } from '../interfaces/user.interface';
 import ApiError from '../utils/apiError';
-import { validatePassword } from '../utils/utils';
+import { hashPassword, validatePassword } from '../utils/utils';
 import { UserServices } from './user.service';
 import getUnixTime from 'date-fns/getUnixTime';
+import UserModel from '../models/user.model';
 
 config();
 
@@ -31,7 +32,6 @@ const generateToken = (user: UserInterface, secret: string = process.env.JWT_SEC
  */
 const Login = async (user: LoginInterface) => {
     const isUser = await UserServices.getUserByEmail(user.email);
-    console.log(user);
 
     if (isUser && (await validatePassword(user.password, isUser.password))) {
         const token = generateToken(isUser);
@@ -39,7 +39,26 @@ const Login = async (user: LoginInterface) => {
     } else throw new ApiError(400, 'Email or password is incorrect');
 };
 
+/**
+ * User Register
+ * @param {LoginInterface} user
+ * @returns {Promise<UserInterface>}
+ */
+const Register = async (user: UserInterface): Promise<UserInterface> => {
+    const existUser = await UserServices.getUserByEmail(user.email);
+    if (!existUser) {
+        user = {
+            ...user,
+            password: await hashPassword(user.password),
+            createdBy: 'default',
+            updatedBy: 'default',
+        };
+        return await UserModel.create(user);
+    } else throw new ApiError(400, 'Email already exist');
+};
+
 export const AuthService = {
     Login,
+    Register,
     generateToken,
 };
