@@ -3,7 +3,7 @@ import { PostServices } from '../services/post.service';
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const createdPost = await PostServices.createNewPost(req.body);
+        const createdPost = await PostServices.createNewPost(req.body, req.user);
         res.send(createdPost);
     } catch (error) {
         next(error);
@@ -11,8 +11,9 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
+    const search = req.query.search?.toString();
     try {
-        const posts = await PostServices.getPosts();
+        const posts = await PostServices.getPosts(search as string, req.query.limit as string, req.query.page as string);
         res.send(posts);
     } catch (error) {
         next(error);

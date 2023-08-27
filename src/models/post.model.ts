@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import defaultFields from './default.model';
 import { PostInterface } from '../interfaces/post.interface';
 
@@ -17,11 +17,11 @@ const PostSchema = new mongoose.Schema<PostInterface>(
             required: true,
         },
         category: {
-            type: String,
+            type: Types.ObjectId,
             required: true,
         },
         author: {
-            type: String,
+            type: Types.ObjectId,
             required: true,
         },
         ...defaultFields,
