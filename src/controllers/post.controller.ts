@@ -3,7 +3,7 @@ import { PostServices } from '../services/post.service';
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const createdPost = await PostServices.createNewPost(req.body);
+        const createdPost = await PostServices.createNewPost(req.body, req.user);
         res.send(createdPost);
     } catch (error) {
         next(error);

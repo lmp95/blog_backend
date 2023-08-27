@@ -35,7 +35,7 @@ const Login = async (user: LoginInterface) => {
 
     if (isUser && (await validatePassword(user.password, isUser.password))) {
         const token = generateToken(isUser);
-        return { email: isUser.email, token: token };
+        return { email: isUser.email, username: isUser.username, role: isUser.role, token: token };
     } else throw new ApiError(400, 'Email or password is incorrect');
 };
 

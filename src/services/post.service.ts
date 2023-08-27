@@ -2,7 +2,6 @@ import { isValidObjectId } from 'mongoose';
 import { PostInterface } from '../interfaces/post.interface';
 import { UserInterface } from '../interfaces/user.interface';
 import PostModel from '../models/post.model';
-import UserModel from '../models/user.model';
 import ApiError from '../utils/apiError';
 import { DataTableInterface } from '../interfaces/dataTable.interface';
 import { searchRegexMatch } from '../queries/common';
@@ -11,13 +10,17 @@ import { postListQuery } from '../queries/post.query';
 /**
  * Create new blog post
  * @param {PostInterface} post
+ * @param {UserInterface} user
  * @returns {Promise<PostInterface>}
  */
-const createNewPost = async (post: PostInterface): Promise<PostInterface> => {
-    const newPost = {
+const createNewPost = async (post: PostInterface, user: UserInterface | any): Promise<PostInterface> => {
+    console.log(user);
+
+    const newPost: PostInterface = {
         ...post,
-        createdBy: 'default',
-        updatedBy: 'default',
+        author: user._id,
+        createdBy: user.username,
+        updatedBy: user.username,
     };
     return await PostModel.create(newPost);
 };
@@ -25,7 +28,7 @@ const createNewPost = async (post: PostInterface): Promise<PostInterface> => {
 /**
  * Update blog post
  * @param {string} postId
- * @param {PostInterface} updatePost
+ * @param {PostInterface} post
  * @param {UserInterface} user
  * @returns {Promise<PostInterface>}
  */
@@ -67,6 +70,38 @@ const getPostTotalCount = async (searchQuery?: object): Promise<number> => {
  * @returns {Promise<DataTableInterface>}
  */
 const getPosts = async (search: string, limit: string, page: string): Promise<DataTableInterface> => {
+    const currentPage = parseInt(page);
+    const perPage = parseInt(limit);
+
+    let data: DataTableInterface = {
+        data: [],
+        page: currentPage,
+        perPage: perPage,
+        total: 0,
+    };
+    const match = searchRegexMatch({ field: 'title', search: search });
+    await Promise.all([getPostTotalCount(match), PostModel.aggregate(postListQuery({ match: match, currentPage: currentPage, perPage: perPage }))]).then(
+        (values) => {
+            data = {
+                data: values[1],
+                page: currentPage,
+                perPage: perPage,
+                total: values[0],
+            };
+        }
+    );
+    return data;
+};
+
+/**
+ * Get author's posts
+ * @param {string} search
+ * @param {string} limit
+ * @param {string} page
+ * @param {UserInterface} user
+ * @returns {Promise<DataTableInterface>}
+ */
+const getPostsByAuthor = async (search: string, limit: string, page: string, user: UserInterface): Promise<DataTableInterface> => {
     const currentPage = parseInt(page);
     const perPage = parseInt(limit);
 
