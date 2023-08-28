@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authRouter from './auth.route';
 import userRouter from './user.route';
 import postRouter from './post.route';
+import categoryRouter from './category.route';
 
 const appRouter = Router();
 
@@ -17,6 +18,10 @@ const defaultRoutes = [
     {
         path: '/posts',
         route: postRouter,
+    },
+    {
+        path: '/categories',
+        route: categoryRouter,
     },
 ];
 

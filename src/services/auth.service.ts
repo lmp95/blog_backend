@@ -12,7 +12,7 @@ config();
 
 /**
  * Generate token
- * @param {UserInterface} User
+ * @param {UserInterface} user
  * @param {string} [secret]
  * @returns {string}
  */
@@ -35,7 +35,7 @@ const Login = async (user: LoginInterface) => {
 
     if (isUser && (await validatePassword(user.password, isUser.password))) {
         const token = generateToken(isUser);
-        return { email: isUser.email, username: isUser.username, role: isUser.role, token: token };
+        return { _id: isUser?._id, email: isUser.email, username: isUser.username, role: isUser.role, token: token };
     } else throw new ApiError(400, 'Email or password is incorrect');
 };
 

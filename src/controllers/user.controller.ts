@@ -1,14 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserServices } from '../services/user.service';
-import ApiError from '../utils/apiError';
+import { controllerHandler } from '../utils/utils';
 
-const getUsers = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const users = await UserServices.getUsers();
-        res.send(users);
-    } catch (error) {
-        throw new ApiError(400, 'Fail to retrieve users');
-    }
+const getUsers = (req: Request, res: Response, next: NextFunction) => {
+    controllerHandler(UserServices.getUsers(), res, next);
 };
 
 export const UserController = {
