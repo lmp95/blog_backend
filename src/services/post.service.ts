@@ -1,4 +1,4 @@
-import { isValidObjectId } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
 import { PostInterface } from '../interfaces/post.interface';
 import { UserInterface } from '../interfaces/user.interface';
 import PostModel from '../models/post.model';
@@ -14,8 +14,6 @@ import { postListQuery } from '../queries/post.query';
  * @returns {Promise<PostInterface>}
  */
 const createNewPost = async (post: PostInterface, user: UserInterface | any): Promise<PostInterface> => {
-    console.log(user);
-
     const newPost: PostInterface = {
         ...post,
         author: user._id,
@@ -95,13 +93,12 @@ const getPosts = async (search: string, limit: string, page: string): Promise<Da
 
 /**
  * Get author's posts
- * @param {string} search
+ * @param {string} authorId
  * @param {string} limit
  * @param {string} page
- * @param {UserInterface} user
  * @returns {Promise<DataTableInterface>}
  */
-const getPostsByAuthor = async (search: string, limit: string, page: string, user: UserInterface): Promise<DataTableInterface> => {
+const getPostsByAuthor = async (authorId: string, limit: string, page: string): Promise<DataTableInterface> => {
     const currentPage = parseInt(page);
     const perPage = parseInt(limit);
 
@@ -111,7 +108,7 @@ const getPostsByAuthor = async (search: string, limit: string, page: string, use
         perPage: perPage,
         total: 0,
     };
-    const match = searchRegexMatch({ field: 'title', search: search });
+    const match = { author: new Types.ObjectId(authorId) };
     await Promise.all([getPostTotalCount(match), PostModel.aggregate(postListQuery({ match: match, currentPage: currentPage, perPage: perPage }))]).then(
         (values) => {
             data = {
@@ -151,18 +148,11 @@ const getPostDetailById = async (postId: string): Promise<PostInterface> => {
     else throw new ApiError(400, 'Post is not available.');
 };
 
-/**
- * get post total count
- * @returns {Promise<number>}
- */
-const getCategoryTotalCount = async (): Promise<number> => {
-    return await PostModel.find().count();
-};
-
 export const PostServices = {
     createNewPost,
     getPosts,
     updatePostById,
     deletePostById,
     getPostDetailById,
+    getPostsByAuthor,
 };

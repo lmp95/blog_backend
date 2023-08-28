@@ -26,6 +26,7 @@ export const roleValidation = (role: string) => async (req: Request, res: Respon
         try {
             const reqUser = req.user as UserInterface;
             const user = await UserServices.getUserByEmail(reqUser.email);
+
             if (!user) {
                 return reject(new ApiError(404, 'User not found'));
             }
