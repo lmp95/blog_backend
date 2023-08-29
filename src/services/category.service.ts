@@ -4,6 +4,7 @@ import PostModel from '../models/post.model';
 import ApiError from '../utils/apiError';
 import { CategoryInterface } from '../interfaces/category.interface';
 import CategoryModel from '../models/category.model';
+import { categoryListQuery } from '../queries/category.query';
 
 /**
  * Create new category
@@ -25,7 +26,7 @@ const createNewCategory = async (category: CategoryInterface, user: UserInterfac
  * @returns {Promise<CategoryInterface>}
  */
 const getCategoryList = async (): Promise<CategoryInterface[]> => {
-    return CategoryModel.find();
+    return await CategoryModel.aggregate(categoryListQuery({ limit: 10 }));
 };
 
 /**

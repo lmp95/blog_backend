@@ -5,7 +5,8 @@ import PostModel from '../models/post.model';
 import ApiError from '../utils/apiError';
 import { DataTableInterface } from '../interfaces/dataTable.interface';
 import { searchRegexMatch } from '../queries/common';
-import { postListQuery } from '../queries/post.query';
+import { postDetailQuery, postListQuery } from '../queries/post.query';
+import { POST_STATUS } from '../config/userRole';
 
 /**
  * Create new blog post
@@ -65,9 +66,10 @@ const getPostTotalCount = async (searchQuery?: object): Promise<number> => {
  * @param {string} search
  * @param {string} limit
  * @param {string} page
+ * @param {string} filter
  * @returns {Promise<DataTableInterface>}
  */
-const getPosts = async (search: string, limit: string, page: string): Promise<DataTableInterface> => {
+const getPosts = async (search: string, limit: string, page: string, filter: string): Promise<DataTableInterface> => {
     const currentPage = parseInt(page);
     const perPage = parseInt(limit);
 
@@ -77,7 +79,16 @@ const getPosts = async (search: string, limit: string, page: string): Promise<Da
         perPage: perPage,
         total: 0,
     };
-    const match = searchRegexMatch({ field: 'title', search: search });
+    let filters = [];
+    let match = {};
+    if (filter) {
+        filters.push({
+            category: new Types.ObjectId(filter),
+        });
+    }
+    filters.push({ status: POST_STATUS.PUBLISHED });
+    match = { $and: filters, ...searchRegexMatch({ field: 'title', search: search }) };
+
     await Promise.all([getPostTotalCount(match), PostModel.aggregate(postListQuery({ match: match, currentPage: currentPage, perPage: perPage }))]).then(
         (values) => {
             data = {
@@ -140,11 +151,11 @@ const deletePostById = async (postId: string): Promise<PostInterface> => {
  * @returns {Promise<PostInterface>}
  */
 const getPostDetailById = async (postId: string): Promise<PostInterface> => {
-    let post: PostInterface;
+    let post: PostInterface[];
     if (isValidObjectId(postId)) {
-        post = await PostModel.findById(postId);
+        post = await PostModel.aggregate(postDetailQuery({ match: { _id: new Types.ObjectId(postId) } }));
     }
-    if (post) return post;
+    if (post.length > 0) return post.at(0);
     else throw new ApiError(400, 'Post is not available.');
 };
 

@@ -1,6 +1,7 @@
 import mongoose, { Types } from 'mongoose';
 import defaultFields from './default.model';
 import { PostInterface } from '../interfaces/post.interface';
+import { POST_STATUS } from '../config/userRole';
 
 const PostSchema = new mongoose.Schema<PostInterface>(
     {
@@ -10,6 +11,7 @@ const PostSchema = new mongoose.Schema<PostInterface>(
         },
         status: {
             type: String,
+            enum: Object.values(POST_STATUS),
             required: true,
         },
         content: {
