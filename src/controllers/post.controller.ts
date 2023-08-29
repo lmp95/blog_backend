@@ -8,7 +8,7 @@ const createPost = (req: Request, res: Response, next: NextFunction) => {
 
 const getPosts = (req: Request, res: Response, next: NextFunction) => {
     const search = req.query.search?.toString();
-    controllerHandler(PostServices.getPosts(search as string, req.query.limit as string, req.query.page as string), res, next);
+    controllerHandler(PostServices.getPosts(search as string, req.query.limit as string, req.query.page as string, req.query.filter as string), res, next);
 };
 
 const getPostDetailById = (req: Request, res: Response, next: NextFunction) => {
