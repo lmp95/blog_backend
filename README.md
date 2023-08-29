@@ -21,6 +21,15 @@ copy the .env example file and change accordingly
   npm run dev
 ```
 
+you can restore data of mongodb under mongodb_data folder
+
+```bash
+mongorestore --db [dbname] --drop [file_location]
+```
+
+for testing api, please import postman file under postman folder
+and you can start testing.
+
 ##
 
 ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)

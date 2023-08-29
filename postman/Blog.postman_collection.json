@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "6dde910e-7fbb-4376-bbd8-c1abbb2bb1fa",
+		"name": "Blog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"Bearer\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"lmp@mail.com\",\n    \"password\": \"123@abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Blog Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Football match history\",\n    \"status\": \"Draft\",\n    \"content\": \"In this article, we share insights on the top 10 tips for great UX/UI in modern web applications. Learn more on how to improve design in 2023. Your web application or a website is the salesperson you have at your disposal 24/7. It creates the first impression on your company and product, transmits values, and answers questions. Studies prove that a well-designed UI is able to raise your conversion rate by up to 200%. An improved UX design can boost conversion rates up to 400%. That's why it's essential to make your web app not just attractive, but also convenient and user-friendly. A common aspect of UX is one-time design ― created once and never improved. It doesn't meet new trends and market requirements and remains outdated. As a result, you have an old-fashioned application that is neither informative nor attractive, not convenient for users, and can't stand the competition. Then again, a complete redesign is money- and time-consuming. Therefore, in this article, we focus on ways to improve UX/UI design that already exists without radical changes. It's a list of ten universal methods of improving the UX/UI design of the web app to make it more user-oriented, and both you and your app prosperous. The User Experience Professionals Association defines user experience as: 'Every aspect of the user's interaction with a product, service, or company that makes up the user's perceptions of the whole. User experience design is concerned with all the elements that together make up that interface, including layout, visual design, text, brand, sound, and interaction. The Nielsen Norman Group defines a great user experience as one that meets the exact needs of the customer, without fuss or bother.Simply put, to improve the UX/UI design of a web application means to increase user satisfaction, advance the usability, accessibility, and efficiency of their interaction with the website or app. UX design focuses on the consumer experience of using your product. The meaning of product is broader than just the physical goods or services you sell - it involves the content you create and publish to reach and connect people before they have seen, touched, and got the product. Whether it’s a website, a web app, or a mobile app - UX is a central pillar the user experience rests on. If it doesn't fit the behaviour and requirements of the target audience, that match between the product and the user will never appear.\",\n    \"category\": \"64eb7155cf7ec2b75f7b4695\",\n    \"author\": \"64e8b31b7a4b31edaef0fa5b\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all posts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts?limit=10&page=1&search=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "search",
+							"value": ""
+						},
+						{
+							"key": "filter",
+							"value": "64eb7155cf7ec2b75f7b4695",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Post By Title",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts/64edf1daee18b95dd54bfcb1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"64edf1daee18b95dd54bfcb1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Advance JS\",\n    \"status\": \"Draft\",\n    \"content\": \"In this article, we share insights on the top 10 tips for great UX/UI in modern web applications. Learn more on how to improve design in 2023. Your web application or a website is the salesperson you have at your disposal 24/7. It creates the first impression on your company and product, transmits values, and answers questions. Studies prove that a well-designed UI is able to raise your conversion rate by up to 200%. An improved UX design can boost conversion rates up to 400%. That's why it's essential to make your web app not just attractive, but also convenient and user-friendly. A common aspect of UX is one-time design ― created once and never improved. It doesn't meet new trends and market requirements and remains outdated. As a result, you have an old-fashioned application that is neither informative nor attractive, not convenient for users, and can't stand the competition. Then again, a complete redesign is money- and time-consuming. Therefore, in this article, we focus on ways to improve UX/UI design that already exists without radical changes. It's a list of ten universal methods of improving the UX/UI design of the web app to make it more user-oriented, and both you and your app prosperous. The User Experience Professionals Association defines user experience as: 'Every aspect of the user's interaction with a product, service, or company that makes up the user's perceptions of the whole. User experience design is concerned with all the elements that together make up that interface, including layout, visual design, text, brand, sound, and interaction. The Nielsen Norman Group defines a great user experience as one that meets the exact needs of the customer, without fuss or bother.Simply put, to improve the UX/UI design of a web application means to increase user satisfaction, advance the usability, accessibility, and efficiency of their interaction with the website or app. UX design focuses on the consumer experience of using your product. The meaning of product is broader than just the physical goods or services you sell - it involves the content you create and publish to reach and connect people before they have seen, touched, and got the product. Whether it’s a website, a web app, or a mobile app - UX is a central pillar the user experience rests on. If it doesn't fit the behaviour and requirements of the target audience, that match between the product and the user will never appear.\",\n    \"category\": \"Coding\",\n    \"author\": \"Bohdana Muzyka\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts/64e73c198cd44820631a7a1e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"64e73c198cd44820631a7a1e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts/64e73c1a8cd44820631a7a26",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"64e73c1a8cd44820631a7a26"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Create",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Author 1\",\n    \"password\": \"123@abc\",\n    \"email\": \"author1@mail.com\",\n    \"role\": \"Author\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lifestyle\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3500/api/v1/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get posts by author",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3500/api/v1/posts/author/64e75a4ecb199518a1160e3e?limit=20&page=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"author",
+						"64e75a4ecb199518a1160e3e"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3500/api/v1/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3500",
+					"path": [
+						"api",
+						"v1",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
